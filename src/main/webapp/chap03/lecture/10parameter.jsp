@@ -18,10 +18,10 @@
 		out.print(q+ "의 검색 결과 입니다.");
 		/* 구글 주소창에 jsp?q=korea라고 치면 korea라고 출력이 된다 */
 	%>
+	
 	<%
 	}
 	%>
-	
 	
 </body>
 </html>

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>전송방식(method) : post</h1>
+	<h1>전송방식(method) : post, request body에 붙어있음</h1>
 	<p>길이의 제한이 없음</p>
 	<p>주소란에 노출되지 않음</p>
 	
