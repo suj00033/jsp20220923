@@ -22,7 +22,8 @@
 					   			type : HttpSession
 	
 	application 영역 (기본객체 application) : 하나의 웹 어플리케이션과 관련된 영역
-								type : SetvletContext
+								type : 
+
 	--%>
 	
 	<%

@@ -29,7 +29,7 @@ public class Car {
 		this.price = price;
 	}
 	
-	// 읽을 수 있는 company 프로퍼티 결정
+	// 읽을 수 있는 company 프로퍼티 결정, 필드는 없지만 읽을 수 있음
 	public String getCompany() {
 		return "현대";
 	}
