@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.util.*"%>
 <% request.setCharacterEncoding("utf-8"); %>
 <!DOCTYPE html>
 <html>
@@ -12,12 +13,17 @@
 </head>
 <body>
 <%
-pageContext.setAttribute("arr1", new String[] {"java", "spring", "html"});
-%>
+pageContext.setAttribute("heros", Map.of("cap", "steve", "widow", "natasha", "panthe", "tchala")); // 3개의 엔트리
+%>	
 
-<c:forEach items="${arr1 }" var="item">
-	<p>${item }</p>
+<%--
+Map의 아이템(Entry)의 타입은 Map.Entry
+>> key, value 프로퍼티가 있음
+ --%>
+<c:forEach items="${heros }" var="hero" varStatus="status">
+	<p>${status.count } : ${hero.key } : ${hero.value }</p>
 </c:forEach>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>

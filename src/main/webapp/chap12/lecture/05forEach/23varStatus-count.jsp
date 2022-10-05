@@ -12,13 +12,17 @@
 </head>
 <body>
 <%
-pageContext.setAttribute("arr1", new String[] {"java", "spring", "html"});
+pageContext.setAttribute("foodList", new String[] {"cake", "pizza", "coffee", "milk"});
 %>
 
-<c:forEach items="${arr1 }" var="item">
-	<p>${item }</p>
+<%--
+1 pizza
+2 coffee
+3 milk
+ --%>
+<c:forEach items="${foodList }" var="food" begin="1" varStatus="st"> <%-- count는 무조건 1부터 --%>
+	<p>${st.count } : ${food }</p>
 </c:forEach>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>
