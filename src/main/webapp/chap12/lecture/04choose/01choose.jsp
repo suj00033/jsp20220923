@@ -20,7 +20,7 @@
 		<c:when test="false">
 			<h3>출력됨 2 ????</h3>
 		</c:when>
-		<c:when test="false">
+		<c:when test="true">
 			<h3>출력됨 3 ???????</h3>
 		</c:when>
 		<c:otherwise>
