@@ -16,7 +16,8 @@ import jsp20220923.chap07.Book;
 /**
  * Servlet implementation class Servlet10
  */
-@WebServlet("/Servlet10")
+@WebServlet(value = {"/Servlet10", "/filter/servlet10"})
+
 public class Servlet10 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -46,6 +47,7 @@ public class Servlet10 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 필터에세 utf-8 실행
 		// 일하고
 		// db에서 꺼내기
 		List<Book> list = bookdb;
