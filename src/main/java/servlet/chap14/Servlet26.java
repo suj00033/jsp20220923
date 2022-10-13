@@ -3,10 +3,7 @@ package servlet.chap14;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,19 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import domain.chap14.Employee;
-
 /**
- * Servlet implementation class Servlet17
+ * Servlet implementation class Servlet26
  */
-@WebServlet("/Servlet17")
-public class Servlet17 extends HttpServlet {
+@WebServlet("/Servlet26")
+public class Servlet26 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet17() {
+    public Servlet26() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,7 +31,10 @@ public class Servlet17 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sql = "SELECT FirstName, LastName FROM Employees";
+		String sql = "INSERT INTO Customers "
+				+ "(CustomerName, ContactName, Address, City, PostalCode, Country) "
+				+ "VALUES ('Misa danggo', 'Misaco', 'Yamamoto', 'Nara', '63041', 'Janpan') ";
+		// connection 얻기
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
@@ -45,28 +43,22 @@ public class Servlet17 extends HttpServlet {
 
 		try (
 				Connection con = DriverManager.getConnection(url, user, pw);
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery(sql);) {
-			
-			List<Employee> list = new ArrayList<>();
-			
-			while (rs.next()) {
-				Employee e = new Employee();
-				e.setFirstName(rs.getString(1));  // 컬럼순서
-				e.setLastName(rs.getString(2));
+				// Statement 얻기
+				Statement stmt = con.createStatement();) {
+		
+				int cnt = stmt.executeUpdate(sql);
+				System.out.println(cnt); // 콘솔에 흔적
 				
-				list.add(e); // 리스트에 담아서
-			}
-			
-			request.setAttribute("employeeList", list); // attribute 또 담음
+				if (cnt == 1) {
+					String path = request.getContextPath() + "/Servlet23";
+					response.sendRedirect(path);
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 		
-		// forward / redirect
-		String path = "/WEB-INF/view/chap14/view05.jsp";
-		request.getRequestDispatcher(path).forward(request, response);
 	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -75,5 +67,5 @@ public class Servlet17 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
- 
+
 }

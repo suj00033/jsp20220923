@@ -10,3 +10,9 @@ SELECT * FROM Employees WHERE LastName >= 'e';
 
 -- 주문일자가 1998년 이후인 주문들
 SELECT * FROM Orders WHERE OrderDate >= '1998-01-01';
+
+-- 직원 LastName이 a, b, c로 시작하는 직원들 조회
+SELECT * FROM Employees WHERE LastName < 'd';
+
+-- 주문일자가 1996년 9월 이전인 주문들
+SELECT * FROM Orders WHERE OrderDate <= '1996-09-01';

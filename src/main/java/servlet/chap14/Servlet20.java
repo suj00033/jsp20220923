@@ -3,6 +3,7 @@ package servlet.chap14;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,19 +16,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import domain.chap14.Employee;
+import domain.chap14.Customer;
+import domain.chap14.Product;
 
 /**
- * Servlet implementation class Servlet17
+ * Servlet implementation class Servlet20
  */
-@WebServlet("/Servlet17")
-public class Servlet17 extends HttpServlet {
+@WebServlet("/Servlet20")
+public class Servlet20 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet17() {
+    public Servlet20() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,7 +38,18 @@ public class Servlet17 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sql = "SELECT FirstName, LastName FROM Employees";
+		// 1. request param 수집
+		String idStr = request.getParameter("id");
+		idStr = idStr == null ? "0" : idStr;
+		
+		// 2. request param 가공
+		int id = Integer.parseInt(idStr);
+		
+		// 3. business logic 실행
+		String sql = "SELECT CustomerID, CustomerName, Address, City, Country " 
+				+ "FROM Customers "
+				+ "WHERE CustomerID = ?";
+		
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
@@ -45,26 +58,36 @@ public class Servlet17 extends HttpServlet {
 
 		try (
 				Connection con = DriverManager.getConnection(url, user, pw);
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery(sql);) {
-			
-			List<Employee> list = new ArrayList<>();
-			
-			while (rs.next()) {
-				Employee e = new Employee();
-				e.setFirstName(rs.getString(1));  // 컬럼순서
-				e.setLastName(rs.getString(2));
-				
-				list.add(e); // 리스트에 담아서
+				PreparedStatement cstmt = con.prepareStatement(sql);) {
+
+			System.out.println(id);
+			cstmt.setInt(1, id); // 쿼리의 첫번째 물음표에 int id값 추가
+			try (ResultSet rs = cstmt.executeQuery();) {
+				// 4. add attribute 추가
+
+				List<Customer> list = new ArrayList<>();
+				while (rs.next()) {
+					Customer c = new Customer();
+					c.setId(rs.getInt("customerID"));
+					c.setAddress(rs.getString("address"));
+					c.setCity(rs.getString("city"));
+					c.setCountry(rs.getString("country"));
+					c.setName(rs.getString("customerName"));
+					
+					list.add(c);
+				}
+				request.setAttribute("customers", list);
 			}
-			
-			request.setAttribute("employeeList", list); // attribute 또 담음
 		} catch (Exception e) {
 			e.printStackTrace();
+				
 		}
 		
-		// forward / redirect
-		String path = "/WEB-INF/view/chap14/view05.jsp";
+		// 4. 결과를 attribute 추가
+		
+		
+		// 5. forward / redirect
+		String path = "/WEB-INF/view/chap14/view08.jsp";
 		request.getRequestDispatcher(path).forward(request, response);
 	}
 
@@ -75,5 +98,5 @@ public class Servlet17 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
- 
+
 }

@@ -16,18 +16,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import domain.chap14.Employee;
+import domain.chap14.Product;
 
 /**
- * Servlet implementation class Servlet17
+ * Servlet implementation class Servlet18
  */
-@WebServlet("/Servlet17")
-public class Servlet17 extends HttpServlet {
+@WebServlet("/Servlet18")
+public class Servlet18 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet17() {
+    public Servlet18() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,7 +37,9 @@ public class Servlet17 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sql = "SELECT FirstName, LastName FROM Employees";
+		String sql = "SELECT ProductName, Price FROM Products";
+		
+		// 3. business logic (jdbc로 query 실행)
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
@@ -48,25 +51,30 @@ public class Servlet17 extends HttpServlet {
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);) {
 			
-			List<Employee> list = new ArrayList<>();
-			
-			while (rs.next()) {
-				Employee e = new Employee();
-				e.setFirstName(rs.getString(1));  // 컬럼순서
-				e.setLastName(rs.getString(2));
+			List<Product> list = new ArrayList<>();
+			while (rs.next()) { 									// 행이 true일때 next로 넘어감
+				String productName = rs.getString(1);
+				double price = rs.getDouble(2);
 				
-				list.add(e); // 리스트에 담아서
+				Product product = new Product();
+				
+				product.setName(productName);
+				product.setPrice(price);
+				
+				list.add(product);
+				
 			}
+			// 4. add attribute
+			request.setAttribute("products", list);
 			
-			request.setAttribute("employeeList", list); // attribute 또 담음
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		// forward / redirect
-		String path = "/WEB-INF/view/chap14/view05.jsp";
-		request.getRequestDispatcher(path).forward(request, response);
-	}
+			
+		// 5. forward
+			String path = "/WEB-INF/view/chap14/view06.jsp";
+			request.getRequestDispatcher(path).forward(request, response);
+}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -75,5 +83,5 @@ public class Servlet17 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
- 
+
 }

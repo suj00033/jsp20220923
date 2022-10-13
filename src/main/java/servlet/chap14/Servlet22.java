@@ -3,6 +3,7 @@ package servlet.chap14;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,19 +16,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import domain.chap14.Employee;
+import domain.chap14.Product;
 
 /**
- * Servlet implementation class Servlet17
+ * Servlet implementation class Servlet22
  */
-@WebServlet("/Servlet17")
-public class Servlet17 extends HttpServlet {
+@WebServlet("/Servlet22")
+public class Servlet22 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet17() {
+    public Servlet22() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,36 +37,55 @@ public class Servlet17 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sql = "SELECT FirstName, LastName FROM Employees";
+		// 1. request param 수집
+		String idStr = request.getParameter("id");
+		idStr = idStr == null ? "0" : idStr;
+		
+		// 2. 가공
+		int id = Integer.parseInt(idStr); // numberFormatException 처리
+		
+		// 3. business  
+		String sql = "SELECT ProductName, Price "
+				+ "FROM Products "
+				+ "WHERE ProductId = ?"; // ? parameter 포함
+		
+	
+		
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
 		String user = application.getAttribute("jdbc.username").toString();
 		String pw = application.getAttribute("jdbc.password").toString();
 
+		// 4.
 		try (
 				Connection con = DriverManager.getConnection(url, user, pw);
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery(sql);) {
-			
-			List<Employee> list = new ArrayList<>();
-			
-			while (rs.next()) {
-				Employee e = new Employee();
-				e.setFirstName(rs.getString(1));  // 컬럼순서
-				e.setLastName(rs.getString(2));
-				
-				list.add(e); // 리스트에 담아서
+				PreparedStatement pstmt = con.prepareStatement(sql);) {
+
+			System.out.println(id);
+			pstmt.setInt(1, id); // 쿼리의 첫번째 물음표에 int id값 추가
+			try (ResultSet rs = pstmt.executeQuery();) {
+				// 4. add attribute 추가
+
+				List<Product> list = new ArrayList<>();
+				while (rs.next()) {
+					Product p = new Product();
+					p.setName(rs.getString("productName"));
+					p.setPrice(rs.getDouble("price"));
+
+					list.add(p);
+				}
+				request.setAttribute("products", list);
 			}
-			
-			request.setAttribute("employeeList", list); // attribute 또 담음
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+				
+			}
 		
-		// forward / redirect
-		String path = "/WEB-INF/view/chap14/view05.jsp";
-		request.getRequestDispatcher(path).forward(request, response);
+		
+		// 5.
+		String view = "/WEB-INF/view/chap14/view09.jsp";
+		request.getRequestDispatcher(view).forward(request, response);
 	}
 
 	/**
@@ -75,5 +95,5 @@ public class Servlet17 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
- 
+
 }

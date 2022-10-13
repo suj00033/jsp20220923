@@ -3,8 +3,8 @@ package servlet.chap14;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,19 +15,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import domain.chap14.Customer;
 import domain.chap14.Employee;
 
 /**
- * Servlet implementation class Servlet17
+ * Servlet implementation class Servlet34
  */
-@WebServlet("/Servlet17")
-public class Servlet17 extends HttpServlet {
+@WebServlet("/Servlet24")
+public class Servlet24 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet17() {
+    public Servlet24() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,7 +37,23 @@ public class Servlet17 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sql = "SELECT FirstName, LastName FROM Employees";
+		// 1
+		String keyword = request.getParameter("keyword");
+		
+		if (keyword == null) {
+			keyword = "";
+		}
+		
+		// 2
+		keyword = "%" + keyword + "%";
+		
+		
+		// 3
+		String sql = "SELECT LastName, FirstName "
+				+ "FROM Employees "
+				+ "WHERE LastName LIKE ? "
+				+ "OR FirstName LIKE ? ";
+		
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
@@ -45,25 +62,31 @@ public class Servlet17 extends HttpServlet {
 
 		try (
 				Connection con = DriverManager.getConnection(url, user, pw);
-				Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery(sql);) {
+				PreparedStatement pstmt = con.prepareStatement(sql);) {
 			
-			List<Employee> list = new ArrayList<>();
+			pstmt.setString(1, keyword);
+			pstmt.setString(2, keyword);
 			
-			while (rs.next()) {
-				Employee e = new Employee();
-				e.setFirstName(rs.getString(1));  // 컬럼순서
-				e.setLastName(rs.getString(2));
+			try (ResultSet rs = pstmt.executeQuery()) {
+				// rs에서 데이터 꺼내고
+				List<Employee> list = new ArrayList<>();
+				while (rs.next()) {
+					Employee e = new Employee();
+					e.setFirstName(rs.getString("firstName"));
+					e.setLastName(rs.getNString("lastName"));
+					
+					list.add(e);
+				}
 				
-				list.add(e); // 리스트에 담아서
+				// attribute 추가
+				request.setAttribute("employeeList", list); // view에서 사용하는 attribute명과 같음
 			}
 			
-			request.setAttribute("employeeList", list); // attribute 또 담음
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		// forward / redirect
+		// 5
 		String path = "/WEB-INF/view/chap14/view05.jsp";
 		request.getRequestDispatcher(path).forward(request, response);
 	}
@@ -75,5 +98,5 @@ public class Servlet17 extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
- 
+
 }
