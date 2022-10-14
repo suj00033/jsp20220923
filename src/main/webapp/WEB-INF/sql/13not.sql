@@ -12,5 +12,12 @@ SELECT * FROM Customers WHERE NOT Country = 'USA';
 SELECT * FROM Suppliers WHERE NOT Country = 'USA';
 
 -- OrderDate가 97년도가 아닌 주문 번호들
-SELECT * FROM Orders WHERE NOT (OrderDate >= '1997-01-01' AND OrderDate < '1998-01-01'); -- 괄호를 쓰자
-SELECT * FROM Orders WHERE NOT OrderDate < '1997-01-01' OR OrderDate >= '1998-01-01';
+SELECT * 
+FROM Orders 
+WHERE OrderDate < '1997-01-01' 
+   OR OrderDate >= '1998-01-01';
+   
+SELECT * 
+FROM Orders
+WHERE NOT (OrderDate >= '1997-01-01' 
+           AND OrderDate < '1998-01-01');

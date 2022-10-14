@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class Servlet28
@@ -39,48 +40,53 @@ public class Servlet28 extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1. request parameter 수집
-		String customerName = request.getParameter("cname");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// 1. request param 수집
+		String name = request.getParameter("name");
 		String address = request.getParameter("address");
+		String contactName = request.getParameter("contactName");
 		String city = request.getParameter("city");
 		String country = request.getParameter("country");
-		
+
 		// 2. 가공
-				
-		// 3. business logic (insert into)
-		String sql = "INSERT INTO Customers (CustomerName, Address, City, Country) "
-						+ "VALUES (?, ?, ?, ?)";
-				
+
+		// 3. business logic
+		String sql = "INSERT INTO Customers (CustomerName, ContactName, Address, City, Country)"
+				+ " VALUES (?, ?, ?, ?, ?)";
 		ServletContext application = request.getServletContext();
 
 		String url = application.getAttribute("jdbc.url").toString();
 		String user = application.getAttribute("jdbc.username").toString();
 		String pw = application.getAttribute("jdbc.password").toString();
 
-			try (
-					Connection con = DriverManager.getConnection(url, user, pw);
-					PreparedStatement pstmt = con.prepareStatement(sql);) {
-					
-				pstmt.setString(1, customerName);
-				pstmt.setString(2, address);
-				pstmt.setString(3, city);
-				pstmt.setString(4, country);
-					
-				int cnt = pstmt.executeUpdate();
-					
-				// 4. 결과 확인 (or add attribute)
-					
-				// 5. forward / redirect
-				if (cnt == 1) {
-					String path = request.getContextPath() + "/Servlet23";
-					response.sendRedirect(path);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		try (
+				Connection con = DriverManager.getConnection(url, user, pw);
+				PreparedStatement pstmt = con.prepareStatement(sql);) {
 
+			pstmt.setString(1, name);
+			pstmt.setString(2, contactName);
+			pstmt.setString(3, address);
+			pstmt.setString(4, city);
+			pstmt.setString(5, country);
+
+			int cnt = pstmt.executeUpdate();
+			// 4. add attribute
+
+			// 5. forward/ redirect
+			if (cnt == 1) {
+				HttpSession session = request.getSession();                   // session을 사용하기 위해 HttpSession으로 부름
+				session.setAttribute("message", "새 고객이 등록되었습니다."); // 잘 등록했다는걸 신호를 보내기 위해서 session필요함
+				
+				response.sendRedirect(request.getContextPath() + "/Servlet23");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	
+
+	}
 
 }
+	
+
+

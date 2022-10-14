@@ -62,7 +62,7 @@ public class Servlet19 extends HttpServlet {
 				Customer customer = new Customer();
 				
 				customer.setId(customerId);
-				customer.setName(customerName);
+				customer.setCustomerName(customerName);
 				customer.setAddress(address);
 				customer.setCity(city);
 				customer.setCountry(country);

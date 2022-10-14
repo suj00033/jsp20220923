@@ -1,12 +1,19 @@
 package domain.chap14;
 
 public class Customer {
-	private String name;
+	private String CustomerName;
+	private String contactName;
 	private String address;
 	private int id;
 	private String city;
 	private String country;
 	
+	public String getContactName() {
+		return contactName;
+	}
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
 	public String getCity() {
 		return city;
 	}
@@ -25,11 +32,12 @@ public class Customer {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	
+	public String getCustomerName() {
+		return CustomerName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setCustomerName(String customerName) {
+		CustomerName = customerName;
 	}
 	public String getAddress() {
 		return address;

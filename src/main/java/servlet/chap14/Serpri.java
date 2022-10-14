@@ -2,8 +2,8 @@ package servlet.chap14;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -16,20 +16,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import domain.chap14.Customer;
-import domain.chap14.Product;
+import domain.chap14.Employee;
+import domain.chap14.Order;
 
 /**
- * Servlet implementation class Servlet20
+ * Servlet implementation class Serpri
  */
-@WebServlet("/Servlet20")
-public class Servlet20 extends HttpServlet {
+@WebServlet("/Serpri")
+public class Serpri extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Servlet20() {
+    public Serpri() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,17 +38,7 @@ public class Servlet20 extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1. request param 수집
-		String idStr = request.getParameter("id");
-		idStr = idStr == null ? "0" : idStr;
-		
-		// 2. request param 가공
-		int id = Integer.parseInt(idStr);
-		
-		// 3. business logic 실행
-		String sql = "SELECT CustomerID, CustomerName, Address, City, Country " 
-				+ "FROM Customers "
-				+ "WHERE CustomerID = ?";
+		String sql = "SELECT OrderDate FROM Orders WHERE OrderDate BETWEEN '1996-08-01' AND '1996-08-31'";
 		
 		ServletContext application = request.getServletContext();
 
@@ -58,38 +48,30 @@ public class Servlet20 extends HttpServlet {
 
 		try (
 				Connection con = DriverManager.getConnection(url, user, pw);
-				PreparedStatement cstmt = con.prepareStatement(sql);) {
-
-			System.out.println(id);
-			cstmt.setInt(1, id); // 쿼리의 첫번째 물음표에 int id값 추가
-			try (ResultSet rs = cstmt.executeQuery();) {
-				// 4. add attribute 추가
-
-				List<Customer> list = new ArrayList<>();
-				while (rs.next()) {
-					Customer c = new Customer();
-					c.setId(rs.getInt("customerID"));
-					c.setAddress(rs.getString("address"));
-					c.setCity(rs.getString("city"));
-					c.setCountry(rs.getString("country"));
-					c.setCustomerName(rs.getString("customerName"));
-					
-					list.add(c);
-				}
-				request.setAttribute("customers", list);
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);) {
+			
+			List<Order> list = new ArrayList<>();
+			
+			while (rs.next()) {
+				Order o = new Order();
+				o.setOrderId(rs.getInt(1));
+				o.setCustomerId(rs.getInt(2));
+				o.setOrderDate(rs.getNString(3).toString());
+				
+				list.add(o);
 			}
+			request.setAttribute("orderDate", list);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-				
 		}
 		
-		// 4. 결과를 attribute 추가
-		
-		
-		// 5. forward / redirect
-		String path = "/WEB-INF/view/chap14/view08.jsp";
+		// forward / redirect
+		String path = "/WEB-INF/view/chap14/pri.jsp";
 		request.getRequestDispatcher(path).forward(request, response);
 	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
