@@ -3242,6 +3242,6 @@ FROM
     information_schema.tables
 WHERE
     table_schema = 'w3schools'
-ORDER BY 1;
+ORDER BY 1; -- 하고 번개모양 누르기
 
 -- 처음상태로 돌리는 페이지
