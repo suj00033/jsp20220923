@@ -24,3 +24,5 @@ ADD COLUMN col6 INT AFTER col2; -- col2 뒤에 만들겠다
 
 ALTER TABLE MyTable19
 ADD COLUMN col7 VARCHAR(255) NOT NULL UNIQUE DEFAULT 'empty';
+
+DROP TABLE  if exists MyTable19;

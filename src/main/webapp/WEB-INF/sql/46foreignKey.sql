@@ -18,4 +18,4 @@ INSERT INTO Products (ProductName, SupplierID, CategoryID, Unit, Price)
 VALUES ('toy', 1, 9, '1ea', '30'); -- not ok, foreign key 제약사항을 위반했기 때문에 생성x
 
 INSERT INTO Products (ProductName, SupplierID, CategoryID, Unit, Price)
-VALUES ('toy', 1, 7, '1ea', '30'); -- ok, foreign key 제약사항 위반안했음 있는 카테고리ID에 값을 줬기 때문에
+VALUES ('toy', 1, 7, '1ea', '30'); -- ok, foreign key 제약사항 위반안했음 있는 카테고리ID(1~8)에 값을 줬기 때문에

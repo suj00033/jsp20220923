@@ -10,7 +10,7 @@ INSERT INTO MyTable11 (col1, col2) VALUES ('a', 'b');
 INSERT INTO MyTable11 (col2) VALUES ('c'); -- c만 들어감
 INSERT INTO MyTable11 (col1) VALUES ('d'); -- not ok
 
-SELECT * FROM MyTable12;
+SELECT * FROM MyTable11;
 
 CREATE TABLE MyTable12 (
 	col1 INT,

@@ -14,6 +14,7 @@ INSERT INTO MyTable13 (col1)
 VALUES (3); -- NOT OK
 
 SELECT * FROM MyTable13;
+DESC MyTable13;
 
 -- 현재 일시
 SELECT NOW();
@@ -27,5 +28,7 @@ CREATE TABLE MyTable14 (
 
 INSERT INTO MyTable14 (name, birth)
 VALUES ('iron', '2022-01-02'); -- 게시글 작성일 보고싶을때
+SELECT * FROM MyTable14;
+
 SELECT * FROM MyTable14;
 

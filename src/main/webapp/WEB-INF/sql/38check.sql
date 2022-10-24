@@ -10,3 +10,4 @@ INSERT INTO MyTable16 (col1, col2) VALUES (-333, 33333);
 INSERT INTO MyTable16 (col1, col2) VALUES (333, -33333); -- col2에는 음수가 안되기 때문에 not ok
 
 SELECT * FROM MyTable16;
+DESC MyTable16;
