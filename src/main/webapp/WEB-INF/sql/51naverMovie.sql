@@ -9,6 +9,8 @@ CREATE TABLE Movie(
     releaseDate DATE
 );
 
+DESC Director;
+
 CREATE TABLE Director(
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL
