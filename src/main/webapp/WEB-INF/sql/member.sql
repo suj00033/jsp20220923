@@ -16,7 +16,13 @@ CREATE TABLE Member (
   	ORDER BY
   		id;
 
--- 가입글 찾기
-select * FROM MEMBER;
-
 DESC Member;
+
+-- Mamber 테이블에 nickName 추가
+-- nickName을 안넣으면 id랑 같은 값을 줌
+ALTER TABLE Member
+ADD COLUMN nickName VARCHAR(255) NOT NULL UNIQUE DEFAULT id AFTER id;
+
+SELECT * FROM Member;
+
+
